@@ -1,0 +1,10 @@
+{
+    [
+        {
+            id: 0,
+            date: "2019/2/5",
+            title: "Test appointment",
+            note: "It is a test note!"
+        }
+    ]
+}

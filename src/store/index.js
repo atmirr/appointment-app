@@ -1,18 +1,42 @@
-import {createStore, applyMiddleware} from 'redux'
+import {createStore, applyMiddleware, compose} from 'redux'
 import appReducer from './reducers'
+import { createEpicMiddleware } from 'redux-observable';
+import { rootEpic } from './epics';
+import {Map, List} from 'immutable'
 
-const consoleMessages = store => next => action => {
+const initialStates = Map({
+    allAppointments : List([
+        Map({
+            id: 0,
+            date: "2019/2/5",
+            title: "Test appointment",
+            note: "It is a test note!"
+        }),
+        Map({
+            id: 1,
+            date: "2018/2/5",
+            title: "Test appointment 2",
+            note: "It is a test note 2!"
+        })
+    ]),
+    query: null,
+    allHolidays: Map({
+        holidays: List([]),
+        isLoading: true,
+        error: null
+    })
+})
 
-    console.groupCollapsed(`Action: ${action.type}`);
+const epicMiddleware = createEpicMiddleware()
 
-    //Dispatch Triggered
-    let result = next(action)
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
-    console.log(store.getState())
-    console.groupEnd();
+const store = createStore(
+    appReducer,
+    initialStates,
+    composeEnhancers(applyMiddleware(epicMiddleware))
+);
 
-    return result
+epicMiddleware.run(rootEpic)
 
-}
-
-export default applyMiddleware(consoleMessages)(createStore)(appReducer)
+export default store

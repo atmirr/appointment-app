@@ -10,7 +10,7 @@ class AppointmentsContainer extends Component {
         const {visibleAppointments} = this.props
 
         return (
-            <div>
+            <div className="row">
                 {visibleAppointments.map ( (item, i) =>
                      <Appointment key={i} date={get(item, 'date')} title={get(item, 'title')} note={get(item, 'note')} />
                 )}
